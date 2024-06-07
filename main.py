@@ -31,7 +31,11 @@ verts = [[1.0*size,1.0*size,1.0*size],[-1.0*size,1.0*size,1.0*size],
 #this somewhere and I'm pretty sure this is how Unity generates meshes as well
 #[Citation needed]
 faces = [[0,1,2,3],[5,4,7,6],[4,0,3,7],[1,5,6,2],[4,5,1,0],[3,2,6,7]]
- 
+img = Image.open("your_image.jpg")
+img_width, img_height = img.size
+segment_width = img_width // 3  # Assuming the image is divided into 3x2 segments
+segment_height = img_height // 2
+
 #This was written using a lot of magic numbers because my 'camera' is set up
 #as a static object and therefore there was a lot of errors in a few calculations.
 #I basically changed random magic numbers on the go to try to get the best looking
@@ -65,28 +69,19 @@ def cull_faces(inverts = [],infaces = []):
     return return_faces
  
 def draw(infaces):
-    print(infaces, len(infaces)/2)
-    for _ in range(int(len(infaces)/2)):
-        #This color value can be changed to get a desired face colour in RGB (changing the magic numbers as a 'base lighting' value)
-        color((0,0.6+(infaces[_*2+1])*0.6,0))
-        up()
-        #important magic numbers here also
-        goto(verts[infaces[_*2][0]][0]*(5+verts[infaces[_*2][0]][2]/20.0),
-             verts[infaces[_*2][0]][1]*(5+verts[infaces[_*2][0]][2]/20.0))
-        begin_fill()
-        down()
-        goto(verts[infaces[_*2][1]][0]*(5+verts[infaces[_*2][1]][2]/20.0),
-             verts[infaces[_*2][1]][1]*(5+verts[infaces[_*2][1]][2]/20.0))
-        goto(verts[infaces[_*2][2]][0]*(5+verts[infaces[_*2][2]][2]/20.0),
-             verts[infaces[_*2][2]][1]*(5+verts[infaces[_*2][2]][2]/20.0))
-        goto(verts[infaces[_*2][3]][0]*(5+verts[infaces[_*2][3]][2]/20.0),
-             verts[infaces[_*2][3]][1]*(5+verts[infaces[_*2][3]][2]/20.0))
-        goto(verts[infaces[_*2][0]][0]*(5+verts[infaces[_*2][0]][2]/20.0),
-             verts[infaces[_*2][0]][1]*(5+verts[infaces[_*2][0]][2]/20.0))
-        end_fill()
-        up()
-        
+    for _ in range(int(len(infaces) / 2)):
+        index = infaces[_ * 2][0]
+        color_img = img.crop((index * segment_width, 0, (index + 1) * segment_width, img_height))
+        color_img = color_img.resize((5 + verts[index][2] // 20, 5 + verts[index][2] // 20))  # Adjust image size
+        color_img.save("untitled.jpg")  # Save temporary image
+        register_shape("untitled.jpg")  # Register image as turtle shape
+        shape("untitled.jpg")  # Set turtle shape to image
+        goto(verts[infaces[_ * 2][0]][0] * (5 + verts[infaces[_ * 2][0]][2] / 20.0),
+             verts[infaces[_ * 2][0]][1] * (5 + verts[infaces[_ * 2][0]][2] / 20.0))
+        stamp()
+        clear()
     update()
+
  
 def rotate(xAxis = 59,yAxis = 21,zAxis = 12):
     #calculate for every angle
