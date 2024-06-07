@@ -1,7 +1,7 @@
 from turtle import *
 from math import *
 from time import sleep
- 
+
 setup()
 up()
 #speed('normal') #probably redundant at this stage if using delay(0)
