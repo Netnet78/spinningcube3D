@@ -1,7 +1,7 @@
 from turtle import *
 from math import *
 from time import sleep
-
+from PIL import Image
 setup()
 up()
 #speed('normal') #probably redundant at this stage if using delay(0)
@@ -85,9 +85,7 @@ def draw(infaces):
              verts[infaces[_*2][0]][1]*(5+verts[infaces[_*2][0]][2]/20.0))
         end_fill()
         up()
-        #These 3D numbers are calculated very roughly using not much accuracy,
-        #try not to hate on my magic number fairly accurate representations of vertices in
-        #3D space ;P
+        
     update()
  
 def rotate(xAxis = 59,yAxis = 21,zAxis = 12):
@@ -119,7 +117,7 @@ def rotate(xAxis = 59,yAxis = 21,zAxis = 12):
         #rotate around Z axis
         verts[vert][0] = zx
         verts[vert][1] = zy
- 
+# Control functions for Left Right Down and Up
 def L():
     clear()
     rotate(0,5,0)
@@ -138,7 +136,7 @@ def D():
     draw(cull_faces(verts,faces))
 
 flag = True
-
+# Calliing these functions to smoothen the animation
 def Up():
     i = 5
     for i in range(5):
@@ -163,7 +161,7 @@ def autoLeft():
             L()
         else:
             break
-
+# Automatic mode 
 def autoRight():
     global flag
     for i in range(5000):
@@ -187,7 +185,8 @@ def autoDown():
             D()
         else:
             break
-    
+# Start and Stop toggle
+# Flag variable is global and that's why we can call it without being "undefined"
 def stop():
     global flag
     flag = False
